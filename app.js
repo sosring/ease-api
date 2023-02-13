@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
+ 
+// Middleware
+app.use(express.json())
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('home')
-})
+const productRouter = require('./routes/product') 
+app.use('/api/products', productRouter)
 
 module.exports = app

@@ -27,4 +27,4 @@ const productSchema = new Schema({
   images: [String],
 })
 
-module.export = model('product', productSchema) 
+module.exports = model('product', productSchema) 
