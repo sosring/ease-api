@@ -1,20 +1,30 @@
 {
-  "name": "ease-backend",
+  "name": "ease-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server -e js"
+    "dev": "nodemon server.js -e js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sosring/ease-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sosring/ease-backend/issues"
+  },
+  "homepage": "https://github.com/sosring/ease-backend#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.9.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.1",
+    "nodemon": "^2.0.21",
+    "slugify": "^1.6.5",
+    "validator": "^13.9.0"
   }
 }
