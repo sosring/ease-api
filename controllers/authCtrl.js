@@ -1,5 +1,7 @@
 const User = require('../models/user.model')
 const jwt = require('jsonwebtoken')
+const catchAsync = require('../utils/catchAsync')
+const AppError = require('../utils/AppError')
 
 const signToken = id => {
   return jwt.sign({id: id}, 
@@ -8,8 +10,7 @@ const signToken = id => {
   )
 }
 
-exports.signup = async (req, res) => {
-  try {
+exports.signup = catchAsync(async (req, res, next) => {
   const user = await User.create({
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -26,29 +27,19 @@ exports.signup = async (req, res) => {
       user,
       token
     })
-  }
-  catch (err) {
+}) 
 
-    res.status(404)
-      .json({
-        status: "fail",
-        message: err.message 
-      })
-  }
-} 
-
-exports.login = async (req, res) => {
-  try {
+exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body
 
   if(!email || !password) {
-    throw Error('Please provide email and password')
+    next(new AppError('Please provide email and password', 404))
   }
 
   const user = await User.findOne({email: email}).select('+password')
 
   if(!user || !(await user.correctPassword(password, user.password))) {
-    throw Error('Incorrect Email or Password')
+    next(new AppError('Incorrect Email or Password', 404))
   }
 
   const token = signToken(user._id)
@@ -59,13 +50,4 @@ exports.login = async (req, res) => {
       user,
       token
     })
-  }
-  catch (err) {
-
-    res.status(404)
-      .json({
-        status: "fail",
-        message: err.message 
-      })
-  }
-}
+})
