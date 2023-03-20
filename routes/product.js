@@ -4,13 +4,9 @@ const productCtrl = require('../controllers/productCtrl')
 Router.post('/create', productCtrl.createNewProduct)
 
 Router.route('/')
-  .get((req, res) => {
-    res.send('hello')
-  })
+  .get(productCtrl.getAllProducts)
 
 Router.route('/:id')
-  .get((req, res) => {
-    res.send(req.params.id)
-  })
+  .get(productCtrl.getProduct)
 
 module.exports = Router

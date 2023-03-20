@@ -31,10 +31,19 @@ const ProductSchema = new Schema({
     required: [true, 'A product must have an image!']
   },
   sizes: [{
-    size: String,
-    price: Number,
-    stock: Number,
-    Discount: {
+    size: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+    stock: {
+      type: Number,
+      required: true
+    },
+    discount: {
       type: Number,
       default: null 
     }
