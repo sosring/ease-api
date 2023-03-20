@@ -6,7 +6,9 @@ app.use(express.json())
 
 // routes
 const userRouter = require('./routes/user')
-app.use('/api/users', userRouter)
+const productRouter = require('./routes/product') 
+app.use('/api/user', userRouter)
+app.use('/api/product', productRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on the server`, 404))

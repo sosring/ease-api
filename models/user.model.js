@@ -7,6 +7,7 @@ const UserSchema = new Schema({
   firstname: {
     type: String,
     required: [true, "Please give us your firstname!"],
+    unique: true
   },
   lastname: {
     type: String,
@@ -29,6 +30,11 @@ const UserSchema = new Schema({
   photo: {
     type: String
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
   passwordConfirm: {
     type: String,
     required: true,
@@ -38,7 +44,8 @@ const UserSchema = new Schema({
       },
       message: "Passwords are not the same!"
     }
-  }
+  },
+  passwordChangeAt: Date
 })
 
 UserSchema.pre('save', async function(next) {
@@ -52,6 +59,16 @@ UserSchema.pre('save', async function(next) {
 
 UserSchema.methods.correctPassword = async function(userPassword, serverPassword) {
   return bcrypt.compare(userPassword, serverPassword)
+}
+
+UserSchema.methods.changePasswordAt = function (JWT_Timestamp) {
+  if(this.passwordChangeAt) {
+    const changeTimeStamp = parseInt(this.passwordChangeAt.getTime() / 1000, 10)
+    console.log(changeTimeStamp)
+    return JWT_Timestamp < changeTimeStamp
+  }
+
+  return false
 }
 
 module.exports = model('Users', UserSchema)

@@ -6,6 +6,8 @@ Router.post('/signup', authCtrl.signup)
 Router.post('/login', authCtrl.login)
 
 Router.route('/')
-  .get(userCtrl.getAllUsers)
+  .get(authCtrl.protect,
+      authCtrl.restrictTo('admin'),
+      userCtrl.getAllUsers)
 
 module.exports = Router
