@@ -18,7 +18,7 @@ exports.createNewProduct = catchAsync(async(req, res, next) => {
 exports.getAllProducts = catchAsync(async (req, res, next) => {
 
   const features = new APIFeatures(Product.find(), req.query)
-  features.filter().sort().field_limiting().pagination()
+     .filter().sort().field_limiting().pagination()
 
   const products = await features.query
   console.log(features.query)
