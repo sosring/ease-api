@@ -1,9 +1,7 @@
 const Product = require('../models/product.model')
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/AppError')
-const productModel = require('../models/product.model')
 const APIFeatures = require('../utils/ApiFeatures')
-const { query } = require('express')
 
 exports.createNewProduct = catchAsync(async(req, res, next) => {
   const product = await Product.create(req.body)

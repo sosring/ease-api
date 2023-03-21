@@ -7,6 +7,7 @@ app.use(express.json())
 // routes
 const userRouter = require('./routes/user')
 const productRouter = require('./routes/product') 
+
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 

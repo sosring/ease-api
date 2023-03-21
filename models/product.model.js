@@ -4,7 +4,8 @@ const slugify = require('slugify')
 const ProductSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'A product must have a name!']
+    required: [true, 'A product must have a name!'],
+    trim: true
   },
   brand: {
     type: String,
@@ -13,8 +14,10 @@ const ProductSchema = new Schema({
   description: {
     type: String,
     required: [true, 'A product must have a description!'],
-    maxlength: [300, 'A product description must be under 300 letters!']
+    maxlength: [500, 'A product description must be under 300 letters!'],
+    trim: true
   },
+  summary: String,
   category: {
     type: String,
     required: [true, 'A product must have a category!'],
@@ -30,7 +33,7 @@ const ProductSchema = new Schema({
     type: [String],
     required: [true, 'A product must have an image!']
   },
-  sizes: [{
+  variants: [{
     size: {
       type: String,
       required: true
@@ -55,6 +58,7 @@ const ProductSchema = new Schema({
 ProductSchema.pre('save', function(next){
   this.slug = slugify(this.name, { lower: true }) 
   this.thumbnail = this.images[0]
+  this.summary = `${this.description.slice(0, 150)}...` 
 
   next()
 })
