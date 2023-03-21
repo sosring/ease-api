@@ -21,7 +21,6 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
      .filter().sort().field_limiting().pagination()
 
   const products = await features.query
-  console.log(features.query)
 
   res.status(200)
     .json({
