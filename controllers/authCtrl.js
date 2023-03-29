@@ -23,7 +23,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   res.status(201)
     .json({
-      status: "success",
+      status: true,
       user,
       token
     })
@@ -46,7 +46,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
   res.status(201)
     .json({
-      status: "success",
+      status: true,
+      user,
       token
     })
 })

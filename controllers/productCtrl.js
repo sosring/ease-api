@@ -8,8 +8,8 @@ exports.createNewProduct = catchAsync(async(req, res, next) => {
 
   res.status(201)
     .json({
-      status: 'success',
-      data: product
+      status: true,
+      product
     })
 })
 
@@ -22,9 +22,9 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 
   res.status(200)
     .json({
-      status: 'success',
+      status: true,
       results: products.length,
-      data: products
+      products
     })
 })
 
@@ -37,7 +37,7 @@ exports.getProduct = catchAsync(async (req, res, next) => {
 
   res.status(200)
     .json({
-      status: 'success',
-      data: product
+      status: true,
+      product
     })
 })

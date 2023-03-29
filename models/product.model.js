@@ -1,7 +1,26 @@
 const { Schema, model } = require('mongoose')
 const slugify = require('slugify')
 
-const ProductSchema = new Schema({
+const variantSchema = new Schema({
+    size: {
+      type: String,
+      required: true
+    },
+    price: {
+      type: Number,
+      required: true
+    },
+    stock: {
+      type: Number,
+      required: true
+    },
+    discount: {
+      type: Number,
+      default: null 
+    }
+})
+
+const productSchema = new Schema({
   name: {
     type: String,
     required: [true, 'A product must have a name!'],
@@ -33,29 +52,15 @@ const ProductSchema = new Schema({
     type: [String],
     required: [true, 'A product must have an image!']
   },
-  variants: [{
-    size: {
-      type: String,
-      required: true
-    },
-    price: {
-      type: Number,
-      required: true
-    },
-    stock: {
-      type: Number,
-      required: true
-    },
-    discount: {
-      type: Number,
-      default: null 
-    }
-  }],
+  variants: {
+    type: [variantSchema],
+    required: true
+  },
   slug: String,
   thumbnail: String 
 })
 
-ProductSchema.pre('save', function(next){
+productSchema.pre('save', function(next){
   this.slug = slugify(this.name, { lower: true }) 
   this.thumbnail = this.images[0]
   this.summary = `${this.description.slice(0, 150)}...` 
@@ -63,4 +68,4 @@ ProductSchema.pre('save', function(next){
   next()
 })
 
-module.exports = model('Product', ProductSchema)
+module.exports = model('Product', productSchema)
