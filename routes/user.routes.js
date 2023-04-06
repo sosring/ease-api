@@ -8,4 +8,12 @@ router.post('/login', authCtrl.login)
 router.route('/')
   .get(userCtrl.getAllUsers)
 
+router.get('/:id', userCtrl.getUser)
+
+// Route protect Middleware which will return req.user 
+router.use(authCtrl.protect)
+
+router.patch('/updateMe', userCtrl.updateMe)
+router.delete('/deactivate', userCtrl.deactivateUser) 
+
 module.exports = router
