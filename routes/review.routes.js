@@ -9,5 +9,6 @@ router.route('/')
 router.route('/:id')
   .get(reviewCtrl.getReview)
   .patch(authCtrl.protect, reviewCtrl.updateReview)
+  .delete(authCtrl.protect, reviewCtrl.deleteReview)
 
 module.exports = router
