@@ -2,9 +2,17 @@ const User = require('../model/user.model')
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/AppError')
 const APIFeatures = require('../utils/APIFeatures')
+const jwt = require('jsonwebtoken')
+
+const signToken = id => {
+  return jwt.sign({id}, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES
+  })
+}
 
 exports.signup = catchAsync(async (req, res, next) => {
 
+  // Create a user if it meets the credentials 
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
@@ -12,9 +20,13 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm
   })
 
+  // Crate a token 
+  const token = signToken(user._id)
+
   res.status(201)
     .json({
-      newUser
+      newUser,
+      token
     })
 }) 
 
@@ -33,11 +45,54 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 404))
   }
 
-  // Send Token
+  // Create token
+  const token = signToken(user._id)
 
   // Send responds
   res.status(200)
     .json({
-      user
+      user,
+      token
     })
 })
+
+exports.protect = catchAsync(async (req, res, next) => {
+  // Check if theres Headers.authorization token & startsWith 'Bearer' 
+  let token
+  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
+  }
+
+  if(!token) {
+    return next(new AppError('You are not logged in! Please log in to get access.'))
+  }
+  // Decode and validate token
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
+  console.log(decoded)
+  
+  // Check if the user still exist 
+  const currentUser = await User.findById(decoded.id)    
+  if(!currentUser) {
+    return next('User no longer exist!', 404)
+  }
+
+  // Check if user has chaged the password 
+  // Model methods checkPasswordChange   
+
+  // Send req.user = currentUser 
+  req.user = currentUser
+  next()
+})
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if(!roles.includes(req.user.role)) {
+      return next(new AppError('You do not have permission to perform this action', 403))
+    }
+    next()
+  }
+}
+
+// Update password
+// Reset Password
+// Forgot password

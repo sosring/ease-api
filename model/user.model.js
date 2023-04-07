@@ -51,14 +51,34 @@ userSchema.pre('save', async function(next) {
   next()
 })
 
+userSchema.pre('save', async function(next) {
+  // Check if password is not modified 
+  if(!this.isModified('password') || this.isNew) return next()
+
+  this.passwordChangeAt = Date.now() - 1000
+  next()
+})
+
 userSchema.pre(/^find/, function(next) {
   // This Middleware checks if the user is active
-  this.find({ isActive: { $ne: false } })
+  this.find({ isActive: { $ne: false }})
   next()
 })
 
 userSchema.methods.comparePassword = async function(clientPass, serverPass) {
   return await bcrypt.compare(clientPass, serverPass)
 }
+
+/*
+userSchema.methods.checkPasswordChange = async function(JWT_Timestamp) {
+  if(this.passwordChangeAt) {
+    const changedTimestamp = parseInt(this.passwordChangeAt)
+
+    return JWT_Timestamp < changedTimestamp 
+  }
+
+  return false
+}
+*/
 
 module.exports = mongoose.model('User', userSchema)
