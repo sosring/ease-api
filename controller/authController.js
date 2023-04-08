@@ -14,7 +14,7 @@ const createAndSendToken  = (user, statusCode, res) => {
 
   const token = signToken(user._id)
   const cookieOption = {
-    expires: new Date(Date.now() * process.env.JWT_COOKIE_EXPIRES),
+    //expires: new Date(Date.now() * process.env.JWT_COOKIE_EXPIRES),
     httpOnly: true
   }
   // If production set secure true
@@ -53,8 +53,11 @@ exports.login = catchAsync(async (req, res, next) => {
   // Check if the user exist ? send Error 
   const user = await User.findOne({email: email}).select('+password')
 
-  console.log(await user.comparePassword(password, user.password))
-  if(!user || !(await user.comparePassword(password, user.password))) {
+  if(!user) {
+    return next(new AppError("User doesn't exist! please sign up", 401))
+  }
+
+  if(!(await user.comparePassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 404))
   }
 
@@ -73,7 +76,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   // Decode and validate token
   const decoded = jwt.verify(token, process.env.JWT_SECRET)
-  console.log(decoded)
   
   // Check if the user still exist 
   const currentUser = await User.findById(decoded.id)    
