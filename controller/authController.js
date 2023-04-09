@@ -14,7 +14,7 @@ const createAndSendToken  = (user, statusCode, res) => {
 
   const token = signToken(user._id)
   const cookieOption = {
-    //expires: new Date(Date.now() * process.env.JWT_COOKIE_EXPIRES),
+    expires: new Date(Date.now() + 99999999 * 100),
     httpOnly: true
   }
   // If production set secure true
@@ -25,7 +25,6 @@ const createAndSendToken  = (user, statusCode, res) => {
 
   res.status(statusCode)
     .json({
-      user,
       token
     })
 }
