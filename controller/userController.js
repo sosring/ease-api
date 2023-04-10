@@ -27,3 +27,9 @@ exports.getUser = catchAsync(async (req, res, next) => {
       user
     })
 })
+
+exports.getMe = catchAsync(async (req, res, next) => {
+  req.params.id = req.user._id
+
+  next()
+}) 
